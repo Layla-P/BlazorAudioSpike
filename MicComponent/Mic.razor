@@ -1,0 +1,11 @@
+﻿<h3>Mic</h3>
+
+<div>
+	<video @ref="MicElement">Video stream not available.</video>
+	@if (!String.IsNullOrWhiteSpace(errorMessage))
+	{
+		<div class="camera-error">
+			@errorMessage
+		</div>
+	}
+</div>
