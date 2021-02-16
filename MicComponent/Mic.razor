@@ -1,11 +1,16 @@
 ﻿<h3>Mic</h3>
 
-<div>
-	<video @ref="MicElement">Video stream not available.</video>
-	@if (!String.IsNullOrWhiteSpace(errorMessage))
-	{
-		<div class="camera-error">
-			@errorMessage
-		</div>
-	}
-</div>
+<button id="recorder-button">
+	<div id="recorder-button-div" @onclick="Record">RECORD</div>
+</button>
+<audio @ref="MicElement"></audio>
+
+@*<div>
+		<video @ref="MicElement">Audio stream not available.</video>
+		@if (!String.IsNullOrWhiteSpace(errorMessage))
+		{
+			<div class="camera-error">
+				@errorMessage
+			</div>
+		}
+	</div>*@
