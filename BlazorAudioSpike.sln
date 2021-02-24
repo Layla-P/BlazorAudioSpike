@@ -9,7 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebcamComponent", "WebcamCo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicComponent", "MicComponent\MicComponent.csproj", "{CA0A7DF0-038E-4C91-A77D-9FE2B82FB648}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioProcessor", "AudioProcessor\AudioProcessor.csproj", "{10CC79FF-30E0-4FD0-B2C2-69CF4C80FE43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AudioProcessor", "AudioProcessor\AudioProcessor.csproj", "{10CC79FF-30E0-4FD0-B2C2-69CF4C80FE43}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssemblyAi", "AssemblyAi\AssemblyAi.csproj", "{46C91101-5F48-4906-973F-E9804D4EAE14}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssemblyAi.Common", "AssemblyAi.Common\AssemblyAi.Common.csproj", "{612D305A-6D73-44E9-AEC3-7A78F392BD95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{10CC79FF-30E0-4FD0-B2C2-69CF4C80FE43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10CC79FF-30E0-4FD0-B2C2-69CF4C80FE43}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10CC79FF-30E0-4FD0-B2C2-69CF4C80FE43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46C91101-5F48-4906-973F-E9804D4EAE14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46C91101-5F48-4906-973F-E9804D4EAE14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46C91101-5F48-4906-973F-E9804D4EAE14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46C91101-5F48-4906-973F-E9804D4EAE14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{612D305A-6D73-44E9-AEC3-7A78F392BD95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{612D305A-6D73-44E9-AEC3-7A78F392BD95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{612D305A-6D73-44E9-AEC3-7A78F392BD95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{612D305A-6D73-44E9-AEC3-7A78F392BD95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
