@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
-using System;
 using System.Threading.Tasks;
 
 namespace AudioProcessor.Data
@@ -11,14 +10,14 @@ namespace AudioProcessor.Data
 	public class BlobContext : IBlobContext
 	{
 		private ILogger _log;
-		private readonly BlobConfiguration _blobConfiguration;
-		public BlobContext(ILoggerFactory log, IOptions<BlobConfiguration> blobConfiguration)
+		private readonly AzStorageConfiguration _blobConfiguration;
+		public BlobContext(ILoggerFactory log, IOptions<AzStorageConfiguration> blobConfiguration)
 		{
 			_log = log.CreateLogger<BlobContext>();
 			_blobConfiguration = blobConfiguration.Value;
 		}
 
-		public async Task<GeneralStatusEnum> Write(byte[] audioBytes, string fileName)
+		public async Task<(GeneralStatusEnum status, string url)> Write(byte[] audioBytes, string fileName)
 		{
 
 			//var storageConnectionString = Environment.GetEnvironmentVariable("StorageConnectionString");
@@ -44,12 +43,14 @@ namespace AudioProcessor.Data
 				catch (StorageException ex)
 				{
 					if (ex.RequestInformation.HttpStatusCode == (int)System.Net.HttpStatusCode.Conflict)
-						return GeneralStatusEnum.BadRequest;
+						return (GeneralStatusEnum.BadRequest, string.Empty);
 				}
 			}
 
-			return GeneralStatusEnum.Ok;
+			var url = $"https://audioclipstorage.blob.core.windows.net/{_blobConfiguration.BlobContainerName}/{fileName}";
 
+			return (GeneralStatusEnum.Ok, url);
+			// 200 = Ok, 202 = resource created (200 + resource location)
 		}
 	}
 }

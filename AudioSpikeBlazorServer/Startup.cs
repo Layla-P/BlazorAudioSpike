@@ -13,6 +13,10 @@ using AudioSpikeBlazorServer.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.StaticFiles;
+using Blazored.LocalStorage;
+using AssemblyAi.Common.Helpers;
+using AssemblyAi.Common.Enums;
+using System.Text.Json;
 
 namespace AudioSpikeBlazorServer
 {
@@ -29,10 +33,22 @@ namespace AudioSpikeBlazorServer
 		// For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
 		public void ConfigureServices(IServiceCollection services)
 		{
-
+			services.AddHttpClient("AudioProcessor", client =>
+			{
+				client.BaseAddress = new Uri("http://localhost:7071/api/");
+			});
 			services.AddRazorPages();
 			services.AddServerSideBlazor();
-			services.AddSingleton<WeatherForecastService>();
+			services.AddBlazoredLocalStorage();
+
+			services.AddSingleton(sp => new JsonSerializerOptions
+			{
+				Converters =
+				{
+					new EnumConvertor<AcousticModelEnum>(),
+					new EnumConvertor<BoostParamEnum>()
+				}
+			});
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

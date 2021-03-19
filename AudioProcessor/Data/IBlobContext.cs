@@ -6,6 +6,6 @@ namespace AudioProcessor.Data
 {
 	public interface IBlobContext
 	{
-		Task<GeneralStatusEnum> Write(byte[] imageBytes, string fileName);
+		Task<(GeneralStatusEnum status, string url)> Write(byte[] imageBytes, string fileName);
 	}
 }

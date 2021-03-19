@@ -9,6 +9,8 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using AudioProcessor.Models;
 using AudioProcessor.Services;
+using System.Net.Http;
+using System.Text;
 
 namespace AudioProcessor
 {
@@ -24,7 +26,7 @@ namespace AudioProcessor
 		[FunctionName("Download")]
 		//[Route("/api/download/{id}")]
 		public async Task<IActionResult> Run(
-			[HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequest req,
+			[HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequest req,
 			ILogger log)
 		{
 			log.LogInformation("C# HTTP trigger function processed a request.");
@@ -55,7 +57,7 @@ namespace AudioProcessor
 			}
 
 			return downloadResponse.GeneralStatusEnum == GeneralStatusEnum.Ok
-				? new OkObjectResult(downloadResponse.AudioEntity.ProcessedUrl)
+				? new JsonResult(downloadResponse)
 				: new StatusCodeResult(102) as IActionResult;
 		}
 	}

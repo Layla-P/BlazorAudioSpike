@@ -8,17 +8,18 @@ using AssemblyAi.Common.Dtos.RequestModels;
 using AssemblyAi.Common.Enums;
 using AssemblyAi.Common.Helpers;
 using AssemblyAi.Helpers.Interfaces;
+using Microsoft.Extensions.Options;
 
 namespace AssemblyAi.Helpers
 {
-	internal class ServiceHelper : IServiceHelpers
+	public class ServiceHelper : IServiceHelpers
 	{
 		private readonly HttpClient _httpClient;
 		private JsonSerializerOptions _serializeOptions;
 		private const string Uri = "https://api.assemblyai.com/v2/transcript";
-		public ServiceHelper(HttpClient httpClient, AssemblyAiAccount assemblyAiAccount, JsonSerializerOptions serializeOptions)
+		public ServiceHelper(HttpClient httpClient, IOptions<AssemblyAiAccount> assemblyAiAccount, JsonSerializerOptions serializeOptions)
 		{
-			var account = assemblyAiAccount ?? throw new ArgumentNullException(nameof(assemblyAiAccount));
+			var account = assemblyAiAccount.Value ?? throw new ArgumentNullException(nameof(assemblyAiAccount));
 			_serializeOptions = serializeOptions ?? throw new ArgumentNullException(nameof(serializeOptions));
 			_httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 			_httpClient.DefaultRequestHeaders.Add("Authorization", account.AuthToken);

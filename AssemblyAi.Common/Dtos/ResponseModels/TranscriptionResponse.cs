@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 using AssemblyAi.Common.Enums;
 using AssemblyAi.Common.Helpers;
 
-namespace AssemblyAi.Common.Dtos
+namespace AssemblyAi.Common.Dtos.RequestModels
 {
     public class TranscriptionResponse
     {

@@ -7,7 +7,15 @@ using PhotoProcessor.Functions;
 using System;
 using System.Linq;
 using System.Reflection;
-//https://damienbod.com/2020/07/12/azure-functions-configuration-and-secrets-management/
+using AssemblyAi;
+using AssemblyAi.Common.Dtos;
+using AssemblyAi.Helpers.Interfaces;
+using AssemblyAi.Helpers;
+using AssemblyAi.Common.Enums;
+using AssemblyAi.Common.Helpers;
+using System.Text.Json;
+using AudioProcessor.Services;
+
 [assembly: FunctionsStartup(typeof(Startup))]
 namespace PhotoProcessor.Functions
 {
@@ -16,20 +24,29 @@ namespace PhotoProcessor.Functions
 
 		public override void Configure(IFunctionsHostBuilder builder)
 		{
+			
 			// ------------------ default configuration initialise ------------------
 			var serviceConfig = builder.Services.FirstOrDefault(s => s.ServiceType == typeof(IConfiguration));
-			if (serviceConfig != null)
-			{
-				_ = (IConfiguration)serviceConfig.ImplementationInstance;
-			}
+			if(serviceConfig is null) { throw new Exception(); }
 
+			_ = (IConfiguration)serviceConfig.ImplementationInstance;
+
+			
 			builder.Services.AddLogging();
+			
 
-			builder.Services.AddOptions<BlobConfiguration>()
+			builder.Services.AddOptions<AzStorageConfiguration>()
 				.Configure<IConfiguration>((settings, configuration) =>
 				{
-					configuration.GetSection("BlobConfiguration").Bind(settings);
+					configuration.GetSection("AzStorageConfiguration").Bind(settings);
 				});
+
+			builder.Services.AddOptions<AssemblyAiAccount>()
+				.Configure<IConfiguration>((settings, configuration) =>
+				{
+					configuration.GetSection("AssemblyAiAccount").Bind(settings);
+				});
+
 
 
 			// ------------------ TableStorageDb initialise ------------------
@@ -40,11 +57,25 @@ namespace PhotoProcessor.Functions
 			//};
 
 			//builder.Services.AddSingleton(tableConfig);
-			//builder.Services.AddSingleton<ITableDbContext, TableDbContext>();
+			builder.Services.AddSingleton(sp => new JsonSerializerOptions
+			{
+				Converters =
+				{
+					new EnumConvertor<AcousticModelEnum>(),
+					new EnumConvertor<BoostParamEnum>()
+				}
+			});
 
-			builder.Services.AddScoped<IBlobContext, BlobContext>();
 
-			builder.Services.AddScoped<IDataRepository, DataRepository>();
+			builder.Services.AddHttpClient();
+			builder.Services.AddHttpClient<IServiceHelpers, ServiceHelper>();
+			builder.Services.AddSingleton<IAssemblyAiService, AssemblyAiService>();
+
+			builder.Services.AddSingleton<ITableDbContext, TableDbContext>();
+
+			builder.Services.AddSingleton<IBlobContext, BlobContext>();
+
+			builder.Services.AddSingleton<IDataRepository, DataRepository>();
 
 			//IPhotoApiSettings photoApiSettings = new PhotoApiSettings
 			//{
@@ -55,7 +86,7 @@ namespace PhotoProcessor.Functions
 
 			//builder.Services.AddSingleton(photoApiSettings);
 			//builder.Services.AddScoped<IPhotoService, PhotoFiddler>();
-			//builder.Services.AddScoped<IDownloadService, DownloadService>();
+			builder.Services.AddSingleton<IDownloadService, DownloadService>();
 
 		}
 

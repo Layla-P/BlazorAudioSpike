@@ -7,6 +7,7 @@ using AssemblyAi.Common.Dtos;
 using AssemblyAi.Common.Dtos.RequestModels;
 using AssemblyAi.Helpers;
 using AssemblyAi.Helpers.Interfaces;
+using Microsoft.Extensions.Options;
 
 namespace AssemblyAi
 {
@@ -17,9 +18,9 @@ namespace AssemblyAi
 		private const string Uri = "https://api.assemblyai.com/v2/transcript";
 
 		
-		public AssemblyAiService(AssemblyAiAccount assemblyAiAccount, HttpClient httpClient, IServiceHelpers helper)
+		public AssemblyAiService(IOptions<AssemblyAiAccount> assemblyAiAccount, HttpClient httpClient, IServiceHelpers helper)
 		{
-			var account = assemblyAiAccount ?? throw new ArgumentNullException(nameof(assemblyAiAccount));
+			var account = assemblyAiAccount.Value ?? throw new ArgumentNullException(nameof(assemblyAiAccount));
 			_helper = helper ?? throw new ArgumentNullException(nameof(helper));
 			_httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 			_httpClient.DefaultRequestHeaders.Add("Authorization", account.AuthToken);
@@ -36,7 +37,9 @@ namespace AssemblyAi
 			response.EnsureSuccessStatusCode();
 
 			var responseJson = await response.Content.ReadAsStringAsync();
-			return _helper.ConvertToTranscriptionResponse(responseJson);
+			var resp =  _helper.ConvertToTranscriptionResponse(responseJson);
+
+			return resp;
 		}
 
 

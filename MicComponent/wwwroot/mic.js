@@ -73,13 +73,13 @@ export async function record(webAudioRecorderJs) {
 				// encodeAfterRecord: our recording won't be usable unless we set this to true
 				encodeAfterRecord: true,
 				// mp3: bitRate: '160 is default, 320 is max quality'
-				mp3: { bitRate: '320' }
+				mp3: { bitRate: '256' }
 			}
 		});
 		// the method that fires when the recording finishes (triggered by webAudioRecorder.finishRecording() below)
 		// the blob is the encoded audio file
 		webAudioRecorder.onComplete = (webAudioRecorder, blob) => {
-			
+
 			ProcessAudio(blob)
 			// create a temporary URL that we can use as the src attribute for our audio element (audioElement)
 			let audioElementSource = window.URL.createObjectURL(blob);
@@ -111,10 +111,17 @@ export async function record(webAudioRecorderJs) {
 
 
 	function ProcessAudio(blob) {
-
+		
 		fetch(`http://localhost:7071/api/AudioProcess`, {
 			method: 'POST',
 			body: blob
-		});
+		})
+			.then(response => response.json())			
+			.then(data => {
+				console.log(data);
+				window.localStorage.setItem('transcription-id', data);
+			})
+			.catch((error) => { console.log(error) });
+
 	}
 }

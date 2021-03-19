@@ -10,7 +10,7 @@ namespace AudioProcessor.Data
 
 		Task<GeneralStatusEnum> Save(byte[] imageBytes, ProcessStatusEnum status);
 
-		//Task<GeneralStatusEnum> UpdateTable(string id, ProcessStatusEnum status, string imageUrl = null);
+		Task<GeneralStatusEnum> UpdateTable(string id, ProcessStatusEnum status, string imageUrl = null);
 
 		//Task<bool> CheckTableRecordAvailable(string id);
 	}

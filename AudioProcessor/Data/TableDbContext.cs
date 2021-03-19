@@ -3,24 +3,23 @@ using System.Threading.Tasks;
 using AudioProcessor.Models;
 using Microsoft.Azure.Cosmos.Table;
 using Microsoft.Extensions.Logging;
-
+using Microsoft.Extensions.Options;
 
 namespace AudioProcessor.Data
 {
 	public class TableDbContext : ITableDbContext
 	{
-		private readonly ITableConfiguration _tableConfiguration;
+		private readonly AzStorageConfiguration _tableConfiguration;
 
 		private CloudTable _table;
 
 		private readonly ILogger _log;
 
 
-		public TableDbContext(ILoggerFactory log, ITableConfiguration tableConfiguration)
+		public TableDbContext(ILoggerFactory log, IOptions<AzStorageConfiguration> tableConfiguration)
 		{
-			_log = log.CreateLogger<TableDbContext>();
-			// https://stackoverflow.com/questions/54876798/how-can-i-use-the-new-di-to-inject-an-ilogger-into-an-azure-function-using-iwebj
-			_tableConfiguration = tableConfiguration;
+			_log = log.CreateLogger<TableDbContext>();			
+			_tableConfiguration = tableConfiguration.Value;
 
 		}
 
@@ -116,7 +115,7 @@ namespace AudioProcessor.Data
 			CloudStorageAccount storageAccount;
 			try
 			{
-				storageAccount = CloudStorageAccount.Parse(_tableConfiguration.ConnectionString);
+				storageAccount = CloudStorageAccount.Parse(_tableConfiguration.StorageConnectionString);
 			}
 			catch (FormatException)
 			{

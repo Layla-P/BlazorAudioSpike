@@ -24,32 +24,25 @@ namespace AudioProcessor
 
 
 		[FunctionName("AudioProcess")]
-        public async Task<ActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
-            ILogger log, ExecutionContext context)
-        {
+		public async Task<JsonResult> Run(
+			[HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+			ILogger log, ExecutionContext context)
+		{
 			UploadResponse response;
 			using (MemoryStream stream = new MemoryStream())
 			{
 				await req.Body.CopyToAsync(stream);
 				byte[] soundBytes = stream.ToArray();
 				log.LogInformation(soundBytes.Length.ToString());
-				
-				//string fileFullPath = Path.Combine(context.FunctionAppDirectory, "temp.mp3");
-				
-				 //await File.WriteAllBytesAsync(fileFullPath, soundBytes);
-
 
 				response = await _dataRepository.SaveResponse(soundBytes, ProcessStatusEnum.Uploaded);
 				log.LogInformation($"status:{response.GeneralStatusEnum}");
 			}
 
-			var downloadFunctionUrl = Environment.GetEnvironmentVariable("DomainUrl")
-			   + $"/Download?code={Environment.GetEnvironmentVariable("DownloadAppKey")}&id={response.Id}";
 
 			return response.GeneralStatusEnum != GeneralStatusEnum.Ok
-				? new BadRequestObjectResult("Something went wrong")
-				: (ActionResult)new OkObjectResult(downloadFunctionUrl);
+				? new JsonResult("Something went wrong")
+				: new JsonResult(response.Id);
 		}
     }
 }
