@@ -27,10 +27,10 @@ namespace AudioProcessor.Data
 			_log = log.CreateLogger<DataRepository>();
 		}
 
-		public async Task<UploadResponse> SaveResponse(byte[] imageBytes, ProcessStatusEnum status)
+		public async Task<UploadResponse> SaveResponse(byte[] audioBytes, ProcessStatusEnum status)
 		{
 			var uploadResponse = new UploadResponse();
-			uploadResponse.GeneralStatusEnum = await Save(imageBytes, status);
+			uploadResponse.GeneralStatusEnum = await Save(audioBytes, status);
 			uploadResponse.Id = transcriptionId;
 			return uploadResponse;
 		}
@@ -50,31 +50,23 @@ namespace AudioProcessor.Data
 			}
 			//send to assemblyai
 
-			var assemblyresponse = await UploadAudioSample(blobResponse.url);
-			transcriptionId = assemblyresponse.Id;
-			if (assemblyresponse.Status == "queued")
-			{
-				status = ProcessStatusEnum.Processing;
-			}
-			else
-			{
-				status = ProcessStatusEnum.Failed;
-			}
+			//var assemblyresponse = await UploadAudioSample(blobResponse.url);
+			//transcriptionId = assemblyresponse.Id;
+			//if (assemblyresponse.Status == "queued")
+			//{
+			//	status = ProcessStatusEnum.Processing;
+			//}
+			//else
+			//{
+			//	status = ProcessStatusEnum.Failed;
+			//}
 
-			blobResponse.status = await SaveAudioDetails(fileName, assemblyresponse.Id, status);
+			//blobResponse.status = await SaveAudioDetails(fileName, assemblyresponse.Id, status);
 
 			return blobResponse.status;
 		}
 
-		private async Task<TranscriptionResponse> UploadAudioSample(string url)
-		{
-			var transcriptionRequest = new TranscriptionRequest
-			{
-				AudioUrl = url
-			};
-
-			return await _assemblyAiService.SubmitAudioFileAsync(transcriptionRequest);
-		}
+		
 
 		public async Task<GeneralStatusEnum> UpdateTable(string id, ProcessStatusEnum status, string audioUrl = null)
 		{

@@ -12,18 +12,18 @@ using AudioProcessor.Data;
 
 namespace AudioProcessor
 {
-    public class AudioProcessFunction
+    public class UploadFunction
     {
 
 		private readonly IDataRepository _dataRepository;
 
-		public AudioProcessFunction(IDataRepository dataRepository)
+		public UploadFunction(IDataRepository dataRepository)
 		{
 			_dataRepository = dataRepository;
 		}
 
 
-		[FunctionName("AudioProcess")]
+		[FunctionName("Upload")]
 		public async Task<JsonResult> Run(
 			[HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
 			ILogger log, ExecutionContext context)

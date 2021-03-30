@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace MicComponent
@@ -39,9 +40,10 @@ namespace MicComponent
 		async Task Record()
 		{
 			var micModule = await moduleTask.Value;
-			await micModule.InvokeAsync<string>("record", audioRecorderDir);
+			await micModule.InvokeAsync<string>("record", audioRecorderDir, DotNetObjectReference.Create(this));
 		}
 
+		
 	}
 }
 

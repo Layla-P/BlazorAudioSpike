@@ -10,6 +10,7 @@ let audioElement; // the audio element that we will feed our recording to
 let webAudioRecorder; // our WebAudioRecorder.js recorder yet to be instantiated
 let currentlyRecording = false; // a boolean to keep track of whether recording is taking place
 let getUserMediaStream; // our stream from getUserMedia
+let apiEndpoint;
 let stream
 
 // public
@@ -42,7 +43,7 @@ function errorMsg(msg, error, dotnet) {
 
 
 
-export async function record(webAudioRecorderJs) {
+export async function record(webAudioRecorderJs, dotnet) {
 
 	// only start the recording stream if there is not another recording in progress
 	if (currentlyRecording === false) {
@@ -80,7 +81,8 @@ export async function record(webAudioRecorderJs) {
 		// the blob is the encoded audio file
 		webAudioRecorder.onComplete = (webAudioRecorder, blob) => {
 
-			ProcessAudio(blob)
+			processAudio(blob)
+			
 			// create a temporary URL that we can use as the src attribute for our audio element (audioElement)
 			let audioElementSource = window.URL.createObjectURL(blob);
 			// set this URL as the src attribute of our audio element
@@ -109,10 +111,9 @@ export async function record(webAudioRecorderJs) {
 		currentlyRecording = false;
 	}
 
-
-	function ProcessAudio(blob) {
+	function processAudio(blob) {
 		
-		fetch(`http://localhost:7071/api/AudioProcess`, {
+		fetch(`http://localhost:7071/api/Upload`, {
 			method: 'POST',
 			body: blob
 		})
