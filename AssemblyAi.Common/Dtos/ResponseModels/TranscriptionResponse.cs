@@ -42,7 +42,10 @@ namespace AssemblyAi.Common.Dtos.RequestModels
 
         [JsonPropertyName("words")] public IEnumerable<Words> Words { get; set; }
 
-        [JsonPropertyName("auto_highlights_result")]
+		[JsonPropertyName("content_safety_labels")]
+		public ContentSafetyLabels ContentSafetyLabels { get; set; }
+
+		[JsonPropertyName("auto_highlights_result")]
         public AutoHighlightsResult AutoHighlightsResult { get; set; }
     }
 }

@@ -31,7 +31,6 @@ namespace AudioProcessor
 		}
 
 		[FunctionName("BlobTrigger")]
-		//[StorageAccount("StorageConnectionString")]
 		public async Task Run([BlobTrigger("audiocontainer/UploadsAudio-{id}.mp3", Connection= "StorageConnectionString")] Stream myBlob, string id, ILogger log)
 		{
 			log.LogInformation($"C# Blob trigger function Processed blob\n Id:{id} \n Size: {myBlob.Length} Bytes");
@@ -42,7 +41,7 @@ namespace AudioProcessor
 
 			log.LogInformation(audioUrl);
 
-			var assemblyresponse = await UploadAudioSample(audioUrl);
+			TranscriptionResponse assemblyresponse = await UploadAudioSample(audioUrl);
 			transcriptionId = assemblyresponse.Id;
 
 			ProcessStatusEnum status = ProcessStatusEnum.Default;
@@ -56,7 +55,7 @@ namespace AudioProcessor
 				status = ProcessStatusEnum.Failed;
 			}
 
-			GeneralStatusEnum statuscode = await UpdateTable(transcriptionId, status, audioUrl, filename);
+			GeneralStatusEnum statuscode = await SaveAudioDetails(filename, transcriptionId, status, audioUrl);
 
 			log.LogInformation($"Process status: {statuscode}, Audio URL: {audioUrl}, TranscriptionId: {transcriptionId}");
 		}
@@ -65,17 +64,13 @@ namespace AudioProcessor
 		{
 			var transcriptionRequest = new TranscriptionRequest
 			{
-				AudioUrl = url
+				AudioUrl = url,
+				WebhookUrl = "https://e07ee3af6977.ngrok.io/api/download"
 			};
 
 			return await _assemblyAiService.SubmitAudioFileAsync(transcriptionRequest);
 		}
 
-		public async Task<GeneralStatusEnum> UpdateTable(string id, ProcessStatusEnum status, string audioUrl, string filename)
-		{
-			var generalStatusCode = await SaveAudioDetails(filename, id, status, audioUrl);
-			return generalStatusCode;
-		}
 
 		private async Task<GeneralStatusEnum> SaveAudioDetails(
 			string fileName,

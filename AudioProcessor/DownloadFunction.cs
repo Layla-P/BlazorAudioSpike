@@ -11,6 +11,7 @@ using AudioProcessor.Models;
 using AudioProcessor.Services;
 using System.Net.Http;
 using System.Text;
+using System.Collections.Generic;
 
 namespace AudioProcessor
 {
@@ -26,17 +27,11 @@ namespace AudioProcessor
 		[FunctionName("Download")]
 		//[Route("/api/download/{id}")]
 		public async Task<IActionResult> Run(
-			[HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequest req,
+			[HttpTrigger(AuthorizationLevel.Anonymous, "post")] WebhookResponse webhookResponse,
 			ILogger log)
 		{
 			log.LogInformation("C# HTTP trigger function processed a request.");
 
-			string id = req.Query["id"];
-
-			if (String.IsNullOrEmpty(id))
-			{
-				return new BadRequestObjectResult("Please pass a id on the query string");
-			}
 
 
 			if (_downloadService == null)
@@ -44,11 +39,16 @@ namespace AudioProcessor
 				log.LogError("download service null");
 				return new BadRequestObjectResult("error");
 			}
+			if(webhookResponse.transcript_id is null ||webhookResponse.status!= "completed")
+			{
+				return new BadRequestObjectResult("errors galore!!");
+			}
 
 			DownloadResponse downloadResponse;
 			try
 			{
-				downloadResponse = await _downloadService.FetchDownload(id);
+				downloadResponse = await _downloadService.FetchDownload(webhookResponse.transcript_id);
+				
 			}
 			catch (Exception e)
 			{
@@ -56,9 +56,7 @@ namespace AudioProcessor
 				return new BadRequestObjectResult(e);
 			}
 
-			return downloadResponse.GeneralStatusEnum == GeneralStatusEnum.Ok
-				? new JsonResult(downloadResponse)
-				: new StatusCodeResult(102) as IActionResult;
+			return  new JsonResult(downloadResponse);
 		}
 	}
 }

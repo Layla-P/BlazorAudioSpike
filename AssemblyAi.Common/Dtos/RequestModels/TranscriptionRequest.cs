@@ -13,7 +13,7 @@ namespace AssemblyAi.Common.Dtos.RequestModels
          [JsonConverter(typeof(EnumConvertor<BoostParamEnum>))]
          public BoostParamEnum BoostParam { get; set; } = BoostParamEnum.Default;
 
-         //[JsonPropertyName("webhook_url")] public string WebhookUrl { get; set; } = string.Empty;
+         [JsonPropertyName("webhook_url")] public string WebhookUrl { get; set; } = string.Empty;
 
          [JsonPropertyName("dual_channel")] public bool DualChannel { get; set; } = false;
         
@@ -27,7 +27,11 @@ namespace AssemblyAi.Common.Dtos.RequestModels
         [JsonConverter(typeof(EnumConvertor<AcousticModelEnum>))]
         public AcousticModelEnum AcousticModelEnum { get; set; } = AcousticModelEnum.Default;
 
-        [JsonPropertyName("auto_highlights")] public bool AutoHighlights { get; set; } = false;
+
+		[JsonPropertyName("content_safety_labels")]
+		public ContentSafetyLabels ContentSafetyLabels { get; set; }
+
+		[JsonPropertyName("auto_highlights")] public bool AutoHighlights { get; set; } = false;
         
     }
 }

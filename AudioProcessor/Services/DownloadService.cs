@@ -5,6 +5,7 @@ using AudioProcessor.Models;
 using System.Threading.Tasks;
 using AssemblyAi;
 using AssemblyAi.Common.Dtos.RequestModels;
+using System.Collections.Generic;
 
 namespace AudioProcessor.Services
 {
@@ -54,6 +55,14 @@ namespace AudioProcessor.Services
             return downloadResponse;
         }
 
+		public async Task<IEnumerable<DownloadResponse>> FetchDownloads()
+		{
+			IEnumerable<DownloadResponse> downloadResponse = new List<DownloadResponse>();
+
+			//todo
+
+			return downloadResponse;
+		}
 		private async Task<TranscriptionResponse> GetTranscription(string id)
 		{
 			return await _assemblyAiService.RetrieveAudioFileAsync(id);
