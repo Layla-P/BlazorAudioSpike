@@ -49,14 +49,6 @@ namespace PhotoProcessor.Functions
 
 
 
-			// ------------------ TableStorageDb initialise ------------------
-			//ITableConfiguration tableConfig = new TableConfiguration
-			//{
-			//	ConnectionString = Environment.GetEnvironmentVariable("StorageConnectionString"),
-			//	TableName = Environment.GetEnvironmentVariable("TableName")
-			//};
-
-			//builder.Services.AddSingleton(tableConfig);
 			builder.Services.AddSingleton(sp => new JsonSerializerOptions
 			{
 				Converters =
@@ -68,7 +60,9 @@ namespace PhotoProcessor.Functions
 
 
 			builder.Services.AddHttpClient();
+
 			builder.Services.AddHttpClient<IServiceHelpers, ServiceHelper>();
+
 			builder.Services.AddSingleton<IAssemblyAiService, AssemblyAiService>();
 
 			builder.Services.AddSingleton<ITableDbContext, TableDbContext>();
@@ -77,15 +71,6 @@ namespace PhotoProcessor.Functions
 
 			builder.Services.AddSingleton<IDataRepository, DataRepository>();
 
-			//IPhotoApiSettings photoApiSettings = new PhotoApiSettings
-			//{
-			//	PrivateKey = Environment.GetEnvironmentVariable("PhotoApiSettingsPrivateKey"),
-			//	AppId = Environment.GetEnvironmentVariable("PhotoApiSettingsAppId")
-
-			//};
-
-			//builder.Services.AddSingleton(photoApiSettings);
-			//builder.Services.AddScoped<IPhotoService, PhotoFiddler>();
 			builder.Services.AddSingleton<IDownloadService, DownloadService>();
 
 		}
