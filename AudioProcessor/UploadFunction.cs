@@ -35,7 +35,7 @@ namespace AudioProcessor
 				byte[] soundBytes = stream.ToArray();
 				log.LogInformation(soundBytes.Length.ToString());
 
-				response = await _dataRepository.SaveResponse(soundBytes, ProcessStatusEnum.Uploaded);
+				response = await _dataRepository.SaveResponse(soundBytes, ProcessStatusEnum.NotStarted);
 				log.LogInformation($"status:{response.GeneralStatusEnum}");
 			}
 

@@ -1,9 +1,8 @@
 ﻿using AudioProcessor.Data;
 using AudioProcessor.Models;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Http;
+using Microsoft.Extensions.DependencyInjection;
 using PhotoProcessor.Functions;
 using System;
 using System.Linq;
@@ -27,7 +26,7 @@ namespace PhotoProcessor.Functions
 
 			
 			builder.Services.AddLogging();
-			builder.Services.AddHttpClient();
+			
 
 			builder.Services.AddOptions<AzStorageConfiguration>()
 				.Configure<IConfiguration>((settings, configuration) =>
@@ -41,6 +40,7 @@ namespace PhotoProcessor.Functions
 					configuration.GetSection("SpeechConfiguration").Bind(settings);
 				});
 
+			builder.Services.AddHttpClient();
 
 			builder.Services.AddSingleton<ITableDbContext, TableDbContext>();
 

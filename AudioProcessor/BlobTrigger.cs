@@ -46,16 +46,24 @@ namespace AudioProcessor
 
 			ProcessStatusEnum status = ProcessStatusEnum.Default;
 
-			if (isSuccessful)
+			if (transcriptionResponse.status == "NotStarted")
 			{
-				status = ProcessStatusEnum.Processing;
+				status = ProcessStatusEnum.NotStarted;
 			}
-			else
+			else if(transcriptionResponse.status == "Failed")
 			{
 				status = ProcessStatusEnum.Failed;
 			}
+			else if (transcriptionResponse.status == "Running")
+			{
+				status = ProcessStatusEnum.Running;
+			}
+			else if (transcriptionResponse.status == "Succeeded")
+			{
+				status = ProcessStatusEnum.Succeeded;
+			}
 
-			GeneralStatusEnum statuscode = await SaveAudioDetails(filename, transcriptionId, status, audioUrl);
+			GeneralStatusEnum statuscode = await SaveAudioDetails(filename, id, status, transcriptionResponse.self);
 
 			log.LogInformation($"Process status: {statuscode}, Audio URL: {audioUrl}, TranscriptionId: {transcriptionId}");
 		}
@@ -64,8 +72,16 @@ namespace AudioProcessor
 		{
 			var transcriptionRequest = new TranscriptionRequest
 			{
-				DisplayName = filename, 
-				ContentUrls = new[] { url }
+				displayName = filename,
+				contentUrls = new[] { url },
+				locale = "en-US",
+				properties = new Properties
+				{
+					diarizationEnabled = false,
+					profanityFilterMode = "Masked",
+					punctuationMode = "automatic",
+					wordLevelTimestampsEnabled = false
+				}
 			};
 			
 			return await _transcriptionService.SubmitAudioFileAsync(transcriptionRequest);

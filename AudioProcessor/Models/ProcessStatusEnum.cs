@@ -4,9 +4,9 @@ namespace AudioProcessor.Models
     public enum ProcessStatusEnum
     {
         Default = 0,
-        Uploaded = 1,
-        Processing = 2,
-        Completed = 4,
+        NotStarted = 1,
+        Running = 2,
+        Succeeded = 4,
         Failed = 5
     }
 }

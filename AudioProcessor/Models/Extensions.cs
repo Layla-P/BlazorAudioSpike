@@ -7,12 +7,12 @@
         {
             switch (e)
             {
-                case ProcessStatusEnum.Uploaded:
-                    return "Uploaded";
-                case ProcessStatusEnum.Processing:
-                    return "Processing";
-                case ProcessStatusEnum.Completed:
-                    return "Completed";
+                case ProcessStatusEnum.NotStarted:
+                    return "NotStarted";
+                case ProcessStatusEnum.Running:
+                    return "Running";
+                case ProcessStatusEnum.Succeeded:
+                    return "Succeeded";
                 case ProcessStatusEnum.Failed:
                     return "Failed";
             }
