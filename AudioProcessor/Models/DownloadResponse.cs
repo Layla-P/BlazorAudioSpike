@@ -1,4 +1,4 @@
-﻿using AssemblyAi.Common.Dtos.RequestModels;
+﻿using Transcription.Common.Dtos.RequestModels;
 
 namespace AudioProcessor.Models
 {

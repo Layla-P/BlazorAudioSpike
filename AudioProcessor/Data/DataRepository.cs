@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AssemblyAi;
-using AssemblyAi.Common.Dtos.RequestModels;
+using Transcription;
+using Transcription.Common.Dtos.RequestModels;
 using AudioProcessor.Models;
 using Microsoft.Extensions.Logging;
 
@@ -11,19 +11,19 @@ namespace AudioProcessor.Data
 	{
 		private readonly IBlobContext _blobContext;
 		private readonly ITableDbContext _tableDbContext;
-		private readonly IAssemblyAiService _assemblyAiService;
+		private readonly ITranscriptionService _transcriptionService;
 		private readonly ILogger _log;
 		private Guid id;
 		private string transcriptionId = string.Empty;
 		public DataRepository(
 			IBlobContext blobContext,
 			ITableDbContext tableDbContext,
-			IAssemblyAiService assemblyAiService,
+			ITranscriptionService transcriptionService,
 			ILoggerFactory log)
 		{
 			_blobContext = blobContext;
 			_tableDbContext = tableDbContext;
-			_assemblyAiService = assemblyAiService ?? throw new ArgumentNullException(nameof(assemblyAiService));
+			_transcriptionService = transcriptionService ?? throw new ArgumentNullException(nameof(transcriptionService));
 			_log = log.CreateLogger<DataRepository>();
 		}
 
@@ -48,20 +48,6 @@ namespace AudioProcessor.Data
 			{
 				return blobResponse.status;
 			}
-			//send to assemblyai
-
-			//var assemblyresponse = await UploadAudioSample(blobResponse.url);
-			//transcriptionId = assemblyresponse.Id;
-			//if (assemblyresponse.Status == "queued")
-			//{
-			//	status = ProcessStatusEnum.Processing;
-			//}
-			//else
-			//{
-			//	status = ProcessStatusEnum.Failed;
-			//}
-
-			//blobResponse.status = await SaveAudioDetails(fileName, assemblyresponse.Id, status);
 
 			return blobResponse.status;
 		}

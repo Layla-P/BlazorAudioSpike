@@ -7,12 +7,12 @@ using PhotoProcessor.Functions;
 using System;
 using System.Linq;
 using System.Reflection;
-using AssemblyAi;
-using AssemblyAi.Common.Dtos;
-using AssemblyAi.Helpers.Interfaces;
-using AssemblyAi.Helpers;
-using AssemblyAi.Common.Enums;
-using AssemblyAi.Common.Helpers;
+using Transcription;
+using Transcription.Common.Dtos;
+using Transcription.Helpers.Interfaces;
+using Transcription.Helpers;
+using Transcription.Common.Enums;
+using Transcription.Common.Helpers;
 using System.Text.Json;
 using AudioProcessor.Services;
 
@@ -41,10 +41,10 @@ namespace PhotoProcessor.Functions
 					configuration.GetSection("AzStorageConfiguration").Bind(settings);
 				});
 
-			builder.Services.AddOptions<AssemblyAiAccount>()
+			builder.Services.AddOptions<TranscriptionAccount>()
 				.Configure<IConfiguration>((settings, configuration) =>
 				{
-					configuration.GetSection("AssemblyAiAccount").Bind(settings);
+					configuration.GetSection("TranscriptionAccount").Bind(settings);
 				});
 
 
@@ -63,7 +63,7 @@ namespace PhotoProcessor.Functions
 
 			builder.Services.AddHttpClient<IServiceHelpers, ServiceHelper>();
 
-			builder.Services.AddSingleton<IAssemblyAiService, AssemblyAiService>();
+			builder.Services.AddSingleton<ITranscriptionService, TranscriptionService>();
 
 			builder.Services.AddSingleton<ITableDbContext, TableDbContext>();
 

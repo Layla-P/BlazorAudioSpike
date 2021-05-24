@@ -14,8 +14,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.StaticFiles;
 using Blazored.LocalStorage;
-using AssemblyAi.Common.Helpers;
-using AssemblyAi.Common.Enums;
+using Transcription.Common.Helpers;
+using Transcription.Common.Enums;
 using System.Text.Json;
 
 namespace AudioSpikeBlazorServer

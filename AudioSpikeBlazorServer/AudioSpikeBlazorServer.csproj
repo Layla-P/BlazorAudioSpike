@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-	<ProjectReference Include="..\AssemblyAi.Common\AssemblyAi.Common.csproj" />
+	<ProjectReference Include="..\Transcription.Common\Transcription.Common.csproj" />
 	<ProjectReference Include="..\MicComponent\MicComponent.csproj" />
   </ItemGroup>
 

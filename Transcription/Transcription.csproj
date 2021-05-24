@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	<TargetFramework>netstandard2.1</TargetFramework>
+	<UserSecretsId>85327f9d-d627-4850-943c-81e10e895b9e</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+	  <_Parameter1>TranscriptionUnitTests</_Parameter1>
+	</AssemblyAttribute>
+  </ItemGroup>
+
+
+  <ItemGroup>
+	<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+	<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="2.2.2" />
+	<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.2" />
+	<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.2.0" />
+	<PackageReference Include="Microsoft.Extensions.Http" Version="2.2.0" />
+	<PackageReference Include="Microsoft.Extensions.Options" Version="2.2.0" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\Transcription.Common\Transcription.Common.csproj" />
+  </ItemGroup>
+
+</Project>

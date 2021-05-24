@@ -3,8 +3,8 @@ using Microsoft.Extensions.Logging;
 using AudioProcessor.Data;
 using AudioProcessor.Models;
 using System.Threading.Tasks;
-using AssemblyAi;
-using AssemblyAi.Common.Dtos.RequestModels;
+using Transcription;
+using Transcription.Common.Dtos.RequestModels;
 using System.Collections.Generic;
 
 namespace AudioProcessor.Services
@@ -13,17 +13,17 @@ namespace AudioProcessor.Services
     {
         private readonly ITableDbContext _tableDbContext;
 		private readonly IDataRepository _dataRepository;
-		private readonly IAssemblyAiService _assemblyAiService;
+		private readonly ITranscriptionService _transcriptionService;
         private ILogger _log;
 
         public DownloadService(ILoggerFactory log,
 			ITableDbContext tableDbContext,
-			IAssemblyAiService assemblyAiService,
+			ITranscriptionService transcriptionService,
 			IDataRepository dataRepository)
         {
             _log = log.CreateLogger<DownloadService>();
             _tableDbContext = tableDbContext;
-			_assemblyAiService = assemblyAiService ?? throw new ArgumentNullException(nameof(assemblyAiService));
+			_transcriptionService = transcriptionService ?? throw new ArgumentNullException(nameof(transcriptionService));
 			_dataRepository = dataRepository ?? throw new ArgumentNullException(nameof(dataRepository));
 		}
 
@@ -65,7 +65,7 @@ namespace AudioProcessor.Services
 		}
 		private async Task<TranscriptionResponse> GetTranscription(string id)
 		{
-			return await _assemblyAiService.RetrieveAudioFileAsync(id);
+			return await _transcriptionService.RetrieveAudioFileAsync(id);
 
 		}
     }

@@ -1,12 +1,11 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using AssemblyAi;
-using AssemblyAi.Common.Dtos.RequestModels;
+using Transcription;
+using Transcription.Common.Dtos.RequestModels;
 using AudioProcessor.Data;
 using AudioProcessor.Models;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -17,17 +16,17 @@ namespace AudioProcessor
 		private ILogger _log;
 		private readonly AzStorageConfiguration _blobConfiguration;
 		private readonly ITableDbContext _tableDbContext;
-		private readonly IAssemblyAiService _assemblyAiService;	
+		private readonly ITranscriptionService _transcriptionService;	
 		private string transcriptionId = string.Empty;
 		public BlobTrigger(ILoggerFactory log,
 			IOptions<AzStorageConfiguration> blobConfiguration,
-			IAssemblyAiService assemblyAiService,
+			ITranscriptionService transcriptionService,
 			ITableDbContext tableContext)
 		{
 			_log = log.CreateLogger<BlobTrigger>();
 			_blobConfiguration = blobConfiguration.Value;
 			_tableDbContext = tableContext ?? throw new ArgumentNullException(nameof(tableContext));
-			_assemblyAiService = assemblyAiService ?? throw new ArgumentNullException(nameof(assemblyAiService));
+			_transcriptionService = transcriptionService ?? throw new ArgumentNullException(nameof(transcriptionService));
 		}
 
 		[FunctionName("BlobTrigger")]
@@ -65,10 +64,10 @@ namespace AudioProcessor
 			var transcriptionRequest = new TranscriptionRequest
 			{
 				AudioUrl = url,
-				WebhookUrl = "https://e07ee3af6977.ngrok.io/api/download"
+				WebhookUrl = "https://cf16e3ff1158.ngrok.io/api/download"
 			};
 
-			return await _assemblyAiService.SubmitAudioFileAsync(transcriptionRequest);
+			return await _transcriptionService.SubmitAudioFileAsync(transcriptionRequest);
 		}
 
 
