@@ -1,19 +1,13 @@
 ﻿using AudioProcessor.Data;
 using AudioProcessor.Models;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Http;
 using PhotoProcessor.Functions;
 using System;
 using System.Linq;
 using System.Reflection;
-using AssemblyAi;
-using AssemblyAi.Common.Dtos;
-using AssemblyAi.Helpers.Interfaces;
-using AssemblyAi.Helpers;
-using AssemblyAi.Common.Enums;
-using AssemblyAi.Common.Helpers;
-using System.Text.Json;
 using AudioProcessor.Services;
 
 [assembly: FunctionsStartup(typeof(Startup))]
@@ -24,16 +18,16 @@ namespace PhotoProcessor.Functions
 
 		public override void Configure(IFunctionsHostBuilder builder)
 		{
-			
+
 			// ------------------ default configuration initialise ------------------
 			var serviceConfig = builder.Services.FirstOrDefault(s => s.ServiceType == typeof(IConfiguration));
-			if(serviceConfig is null) { throw new Exception(); }
+			if (serviceConfig is null) { throw new Exception(); }
 
 			_ = (IConfiguration)serviceConfig.ImplementationInstance;
 
 			
 			builder.Services.AddLogging();
-			
+			builder.Services.AddHttpClient();
 
 			builder.Services.AddOptions<AzStorageConfiguration>()
 				.Configure<IConfiguration>((settings, configuration) =>
@@ -41,29 +35,12 @@ namespace PhotoProcessor.Functions
 					configuration.GetSection("AzStorageConfiguration").Bind(settings);
 				});
 
-			builder.Services.AddOptions<AssemblyAiAccount>()
+			builder.Services.AddOptions<SpeechConfiguration>()
 				.Configure<IConfiguration>((settings, configuration) =>
 				{
-					configuration.GetSection("AssemblyAiAccount").Bind(settings);
+					configuration.GetSection("SpeechConfiguration").Bind(settings);
 				});
 
-
-
-			builder.Services.AddSingleton(sp => new JsonSerializerOptions
-			{
-				Converters =
-				{
-					new EnumConvertor<AcousticModelEnum>(),
-					new EnumConvertor<BoostParamEnum>()
-				}
-			});
-
-
-			builder.Services.AddHttpClient();
-
-			builder.Services.AddHttpClient<IServiceHelpers, ServiceHelper>();
-
-			builder.Services.AddSingleton<IAssemblyAiService, AssemblyAiService>();
 
 			builder.Services.AddSingleton<ITableDbContext, TableDbContext>();
 
@@ -73,11 +50,13 @@ namespace PhotoProcessor.Functions
 
 			builder.Services.AddSingleton<IDownloadService, DownloadService>();
 
+			builder.Services.AddSingleton<TranscriptionService>();
+
 		}
 
 		public override void ConfigureAppConfiguration(IFunctionsConfigurationBuilder builder)
 		{
-			
+
 			builder.ConfigurationBuilder
 			   .SetBasePath(Environment.CurrentDirectory)
 			   .AddJsonFile("local.settings.json", true)

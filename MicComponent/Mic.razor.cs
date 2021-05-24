@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System;
-using System.Net.Http;
+using Microsoft.CognitiveServices.Speech;
+using Microsoft.CognitiveServices.Speech.Audio;
 using System.Threading.Tasks;
 
 namespace MicComponent
@@ -34,6 +35,7 @@ namespace MicComponent
 												.AsTask());
 				var micModule = await moduleTask.Value;
 				await micModule.InvokeVoidAsync("initialize", MicElement, DotNetObjectReference.Create(this));
+
 			}
 		}
 
@@ -43,7 +45,7 @@ namespace MicComponent
 			await micModule.InvokeAsync<string>("record", audioRecorderDir, DotNetObjectReference.Create(this));
 		}
 
-		
+
 	}
 }
 

@@ -1,10 +1,9 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using AssemblyAi;
-using AssemblyAi.Common.Dtos.RequestModels;
 using AudioProcessor.Data;
 using AudioProcessor.Models;
+using AudioProcessor.Services;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
@@ -17,17 +16,18 @@ namespace AudioProcessor
 		private ILogger _log;
 		private readonly AzStorageConfiguration _blobConfiguration;
 		private readonly ITableDbContext _tableDbContext;
-		private readonly IAssemblyAiService _assemblyAiService;	
+		private readonly TranscriptionService _transcriptionService;	
 		private string transcriptionId = string.Empty;
+		private bool isSuccessful = false;
 		public BlobTrigger(ILoggerFactory log,
 			IOptions<AzStorageConfiguration> blobConfiguration,
-			IAssemblyAiService assemblyAiService,
+			TranscriptionService transcriptionService,
 			ITableDbContext tableContext)
 		{
 			_log = log.CreateLogger<BlobTrigger>();
 			_blobConfiguration = blobConfiguration.Value;
 			_tableDbContext = tableContext ?? throw new ArgumentNullException(nameof(tableContext));
-			_assemblyAiService = assemblyAiService ?? throw new ArgumentNullException(nameof(assemblyAiService));
+			_transcriptionService = transcriptionService ?? throw new ArgumentNullException(nameof(transcriptionService));
 		}
 
 		[FunctionName("BlobTrigger")]
@@ -41,12 +41,12 @@ namespace AudioProcessor
 
 			log.LogInformation(audioUrl);
 
-			TranscriptionResponse assemblyresponse = await UploadAudioSample(audioUrl);
-			transcriptionId = assemblyresponse.Id;
+			TranscriptionResponse transcriptionResponse = await UploadAudioSample(audioUrl, filename);
+			
 
 			ProcessStatusEnum status = ProcessStatusEnum.Default;
 
-			if (assemblyresponse.Status == "queued")
+			if (isSuccessful)
 			{
 				status = ProcessStatusEnum.Processing;
 			}
@@ -60,15 +60,15 @@ namespace AudioProcessor
 			log.LogInformation($"Process status: {statuscode}, Audio URL: {audioUrl}, TranscriptionId: {transcriptionId}");
 		}
 
-		private async Task<TranscriptionResponse> UploadAudioSample(string url)
+		private async Task<TranscriptionResponse> UploadAudioSample(string url, string filename)
 		{
 			var transcriptionRequest = new TranscriptionRequest
 			{
-				AudioUrl = url,
-				WebhookUrl = "https://e07ee3af6977.ngrok.io/api/download"
+				DisplayName = filename, 
+				ContentUrls = new[] { url }
 			};
-
-			return await _assemblyAiService.SubmitAudioFileAsync(transcriptionRequest);
+			
+			return await _transcriptionService.SubmitAudioFileAsync(transcriptionRequest);
 		}
 
 

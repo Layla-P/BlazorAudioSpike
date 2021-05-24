@@ -3,8 +3,6 @@ using Microsoft.Extensions.Logging;
 using AudioProcessor.Data;
 using AudioProcessor.Models;
 using System.Threading.Tasks;
-using AssemblyAi;
-using AssemblyAi.Common.Dtos.RequestModels;
 using System.Collections.Generic;
 
 namespace AudioProcessor.Services
@@ -13,17 +11,15 @@ namespace AudioProcessor.Services
     {
         private readonly ITableDbContext _tableDbContext;
 		private readonly IDataRepository _dataRepository;
-		private readonly IAssemblyAiService _assemblyAiService;
         private ILogger _log;
 
         public DownloadService(ILoggerFactory log,
 			ITableDbContext tableDbContext,
-			IAssemblyAiService assemblyAiService,
 			IDataRepository dataRepository)
         {
             _log = log.CreateLogger<DownloadService>();
             _tableDbContext = tableDbContext;
-			_assemblyAiService = assemblyAiService ?? throw new ArgumentNullException(nameof(assemblyAiService));
+	
 			_dataRepository = dataRepository ?? throw new ArgumentNullException(nameof(dataRepository));
 		}
 
@@ -42,14 +38,14 @@ namespace AudioProcessor.Services
 			//signalr to update status.
 			var assemblyResponse = await GetTranscription(id);
 
-			if(assemblyResponse.Status == "completed")
-			{
-				_ = await _dataRepository.UpdateTable(id, ProcessStatusEnum.Completed, null);
-				downloadResponse.GeneralStatusEnum = GeneralStatusEnum.Ok;
-				downloadResponse.AudioEntity = await _tableDbContext.GetEntityAsync("Uploads", id);
-				downloadResponse.TranscriptionResponse = assemblyResponse;
-				return downloadResponse;
-			}
+			//if(assemblyResponse.Status == "completed")
+			//{
+			//	_ = await _dataRepository.UpdateTable(id, ProcessStatusEnum.Completed, null);
+			//	downloadResponse.GeneralStatusEnum = GeneralStatusEnum.Ok;
+			//	downloadResponse.AudioEntity = await _tableDbContext.GetEntityAsync("Uploads", id);
+			//	downloadResponse.TranscriptionResponse = assemblyResponse;
+			//	return downloadResponse;
+			//}
 
 
             return downloadResponse;
@@ -65,7 +61,7 @@ namespace AudioProcessor.Services
 		}
 		private async Task<TranscriptionResponse> GetTranscription(string id)
 		{
-			return await _assemblyAiService.RetrieveAudioFileAsync(id);
+			return null;
 
 		}
     }

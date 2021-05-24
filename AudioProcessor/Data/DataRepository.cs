@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AssemblyAi;
-using AssemblyAi.Common.Dtos.RequestModels;
 using AudioProcessor.Models;
 using Microsoft.Extensions.Logging;
 
@@ -11,19 +9,19 @@ namespace AudioProcessor.Data
 	{
 		private readonly IBlobContext _blobContext;
 		private readonly ITableDbContext _tableDbContext;
-		private readonly IAssemblyAiService _assemblyAiService;
+		//private readonly IAssemblyAiService _assemblyAiService;
 		private readonly ILogger _log;
 		private Guid id;
 		private string transcriptionId = string.Empty;
 		public DataRepository(
 			IBlobContext blobContext,
 			ITableDbContext tableDbContext,
-			IAssemblyAiService assemblyAiService,
+			//IAssemblyAiService assemblyAiService,
 			ILoggerFactory log)
 		{
 			_blobContext = blobContext;
 			_tableDbContext = tableDbContext;
-			_assemblyAiService = assemblyAiService ?? throw new ArgumentNullException(nameof(assemblyAiService));
+			//_assemblyAiService = assemblyAiService ?? throw new ArgumentNullException(nameof(assemblyAiService));
 			_log = log.CreateLogger<DataRepository>();
 		}
 

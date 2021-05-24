@@ -1,6 +1,4 @@
-﻿
-using AssemblyAi.Common.Dtos.RequestModels;
-using Blazored.LocalStorage;
+﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System;
@@ -18,7 +16,7 @@ namespace AudioSpikeBlazorServer.Shared
 		[Inject] ILocalStorageService localStorage { get; set; }
 		[Inject] IHttpClientFactory clientFactory { get; set; }
 
-		[Inject] JsonSerializerOptions serializeOptions { get; set; }
+		//[Inject] JsonSerializerOptions serializeOptions { get; set; }
 		//[Inject] IJSRuntime JsRuntime { get; set; }
 		//Lazy<Task<IJSObjectReference>> moduleTask;
 		//		const string JsModulePath = "./_content/MicComponent/speechToText.js";
