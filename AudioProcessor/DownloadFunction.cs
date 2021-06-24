@@ -39,7 +39,7 @@ namespace AudioProcessor
 				log.LogError("download service null");
 				return new BadRequestObjectResult("error");
 			}
-			if(webhookResponse.transcript_id is null ||webhookResponse.status!= "completed")
+			if(webhookResponse.TranscriptId is null ||webhookResponse.Status!= "completed")
 			{
 				return new BadRequestObjectResult("errors galore!!");
 			}
@@ -47,8 +47,8 @@ namespace AudioProcessor
 			DownloadResponse downloadResponse;
 			try
 			{
-				downloadResponse = await _downloadService.FetchDownload(webhookResponse.transcript_id);
-				
+				downloadResponse = await _downloadService.FetchDownload(webhookResponse.TranscriptId);
+				log.LogWarning(downloadResponse.TranscriptionResponse.Text);
 			}
 			catch (Exception e)
 			{

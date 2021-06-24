@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
+
 
 namespace AudioProcessor.Models
 {
 	public class WebhookResponse
 	{
 
-		[JsonPropertyName("status")]
-		public string status { get; set; }
+		[JsonProperty("status")]
+		public string Status { get; set; }
 
-		[JsonPropertyName("transcript_id")]
-		public string transcript_id { get; set; }
+		[JsonProperty("transcript_id")]
+		public string TranscriptId { get; set; }
 
 	}
 }
