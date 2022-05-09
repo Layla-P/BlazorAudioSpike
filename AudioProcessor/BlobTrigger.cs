@@ -42,12 +42,12 @@ namespace AudioProcessor
 
 			log.LogInformation(audioUrl);
 
-			TranscriptionResponse assemblyresponse = await UploadAudioSample(audioUrl);
-			transcriptionId = assemblyresponse.Id;
-
+			TranscriptionResponse transcriptionResponse = await UploadAudioSample(audioUrl);
+			transcriptionId = transcriptionResponse.Id;
+			log.LogInformation($"Transcription ID: {transcriptionId}");
 			ProcessStatusEnum status = ProcessStatusEnum.Default;
 
-			if (assemblyresponse.Status == "queued")
+			if (transcriptionResponse.Status == "queued")
 			{
 				status = ProcessStatusEnum.Processing;
 			}
@@ -58,7 +58,7 @@ namespace AudioProcessor
 
 			GeneralStatusEnum statuscode = await SaveAudioDetails(filename, transcriptionId, status, audioUrl);
 
-			log.LogInformation($"Process status: {statuscode}, Audio URL: {audioUrl}, TranscriptionId: {transcriptionId}");
+			log.LogInformation($"Process status: {statuscode}, Audio URL: {audioUrl}");
 		}
 
 		private async Task<TranscriptionResponse> UploadAudioSample(string url)

@@ -1,0 +1,25 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+	"StorageConnectionString": "",
+	"AzureWebJobsStorage": "",
+	"FUNCTIONS_WORKER_RUNTIME": "dotnet"
+  },
+  "Host": {
+	"CORS": "*"
+  },
+  "AzStorageConfiguration": {
+	"StorageConnectionString": "set in user secrets",
+	"BlobContainerName": "audiocontainer",
+	"TableName": "audiotable"
+  },
+  "TranscriptionAccount": {
+
+	"AuthToken": "set in user secrets",
+	"Endpoint": "set in user secrets"
+  },
+  "SpeechConfiguration": {
+	"SubscriptionKey": "set in user secrets",
+	"Region": ""
+  }
+}
