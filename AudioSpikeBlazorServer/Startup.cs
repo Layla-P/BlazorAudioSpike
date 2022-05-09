@@ -15,7 +15,6 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.StaticFiles;
 using Blazored.LocalStorage;
 using Transcription.Common.Helpers;
-using Transcription.Common.Enums;
 using System.Text.Json;
 
 namespace AudioSpikeBlazorServer
@@ -41,14 +40,7 @@ namespace AudioSpikeBlazorServer
 			services.AddServerSideBlazor();
 			services.AddBlazoredLocalStorage();
 
-			services.AddSingleton(sp => new JsonSerializerOptions
-			{
-				Converters =
-				{
-					new EnumConvertor<AcousticModelEnum>(),
-					new EnumConvertor<BoostParamEnum>()
-				}
-			});
+			
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

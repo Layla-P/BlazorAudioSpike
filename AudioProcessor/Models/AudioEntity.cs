@@ -17,7 +17,7 @@ namespace AudioProcessor.Models
 			string processedUrl)
 		{
 			PartitionKey = partitionKey;
-			// this is the transcription id from AssemblyAI
+			// this is the transcription id from STT service
 			RowKey = id;
 			FileName = fileName;
 			ProcessStatusEnum = processStatusEnum.EnumValue();

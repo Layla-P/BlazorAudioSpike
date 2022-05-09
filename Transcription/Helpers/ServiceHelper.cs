@@ -5,7 +5,6 @@ using System.Text;
 using System.Text.Json;
 using Transcription.Common.Dtos;
 using Transcription.Common.Dtos.RequestModels;
-using Transcription.Common.Enums;
 using Transcription.Common.Helpers;
 using Transcription.Helpers.Interfaces;
 using Microsoft.Extensions.Options;
@@ -15,14 +14,13 @@ namespace Transcription.Helpers
 	public class ServiceHelper : IServiceHelpers
 	{
 		private readonly HttpClient _httpClient;
-		private JsonSerializerOptions _serializeOptions;
-		private const string Uri = "https://api.assemblyai.com/v2/transcript";
-		public ServiceHelper(HttpClient httpClient, IOptions<TranscriptionAccount> transcriptionAccount, JsonSerializerOptions serializeOptions)
+		private readonly TranscriptionAccount _transcriptionAccount;
+		
+		public ServiceHelper(HttpClient httpClient, IOptions<TranscriptionAccount> transcriptionAccount)
 		{
-			var account = transcriptionAccount.Value ?? throw new ArgumentNullException(nameof(transcriptionAccount));
-			_serializeOptions = serializeOptions ?? throw new ArgumentNullException(nameof(serializeOptions));
+			_transcriptionAccount = transcriptionAccount.Value ?? throw new ArgumentNullException(nameof(transcriptionAccount));
 			_httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-			_httpClient.DefaultRequestHeaders.Add("Authorization", account.AuthToken);
+			_httpClient.DefaultRequestHeaders.Add("Authorization", _transcriptionAccount.AuthToken);
 		}
 
 		public async Task<TranscriptionResponse> SubmitAsync(TranscriptionRequest transcriptionRequest)
@@ -34,7 +32,7 @@ namespace Transcription.Helpers
 		public async Task<ServiceResponse<TranscriptionResponse>> RetrieveAsync(string transcriptionId)
 		{
 			_httpClient.DefaultRequestHeaders.Add("Accepts", "application/json");
-			HttpResponseMessage response = await _httpClient.GetAsync($"{Uri}/{transcriptionId}");
+			HttpResponseMessage response = await _httpClient.GetAsync($"{_transcriptionAccount.Endpoint}/{transcriptionId}");
 
 			var responseJson = await response.Content.ReadAsStringAsync();
 			
@@ -51,8 +49,7 @@ namespace Transcription.Helpers
 
 		public StringContent ConvertToStringContent(TranscriptionRequest transcriptionRequest)
 		{
-		
-			string jsonString = JsonSerializer.Serialize(transcriptionRequest, _serializeOptions);
+			string jsonString = JsonSerializer.Serialize(transcriptionRequest);
 
 			return new StringContent(jsonString, Encoding.UTF8, "application/json");
 		}
@@ -63,7 +60,7 @@ namespace Transcription.Helpers
 
 		public async Task<TranscriptionResponse> PostAsync(StringContent payload)
 		{
-			HttpResponseMessage response = await _httpClient.PostAsync("https://api.assemblyai.com/v2/transcript", payload);
+			HttpResponseMessage response = await _httpClient.PostAsync(_transcriptionAccount.Endpoint, payload);
 			//todo add better error handling in here
 			response.EnsureSuccessStatusCode();
 			string responseJson = await response.Content.ReadAsStringAsync();

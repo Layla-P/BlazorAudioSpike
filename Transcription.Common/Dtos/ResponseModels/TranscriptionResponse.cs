@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using Transcription.Common.Enums;
 using Transcription.Common.Helpers;
 
 namespace Transcription.Common.Dtos.RequestModels
@@ -11,10 +10,6 @@ namespace Transcription.Common.Dtos.RequestModels
 
         [JsonPropertyName("status")] public string Status { get; set; }
 
-        [JsonPropertyName("acoustic_model")]
-        [JsonConverter(typeof(EnumConvertor<AcousticModelEnum>))]
-        public AcousticModelEnum AcousticModel { get; set; }
-
         [JsonPropertyName("audio_duration")] public double? AudioDuration { get; set; }
 
         [JsonPropertyName("audio_url")] public string AudioUrl { get; set; }
@@ -24,10 +19,6 @@ namespace Transcription.Common.Dtos.RequestModels
         [JsonPropertyName("dual_channel")] public bool? DualChannel { get; set; }
 
         [JsonPropertyName("format_text")] public bool FormatText { get; set; }
-
-        [JsonPropertyName("language_model")]
-        [JsonConverter(typeof(EnumConvertor<AcousticModelEnum>))]
-        public AcousticModelEnum LanguageModel { get; set; }
 
         [JsonPropertyName("punctuate")] public bool Punctuate { get; set; }
 

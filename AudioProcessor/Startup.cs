@@ -11,7 +11,6 @@ using Transcription;
 using Transcription.Common.Dtos;
 using Transcription.Helpers.Interfaces;
 using Transcription.Helpers;
-using Transcription.Common.Enums;
 using Transcription.Common.Helpers;
 using System.Text.Json;
 using AudioProcessor.Services;
@@ -49,16 +48,6 @@ namespace PhotoProcessor.Functions
 
 
 
-			builder.Services.AddSingleton(sp => new JsonSerializerOptions
-			{
-				Converters =
-				{
-					new EnumConvertor<AcousticModelEnum>(),
-					new EnumConvertor<BoostParamEnum>()
-				}
-			});
-
-
 			builder.Services.AddHttpClient();
 
 			builder.Services.AddHttpClient<IServiceHelpers, ServiceHelper>();
@@ -77,11 +66,15 @@ namespace PhotoProcessor.Functions
 
 		public override void ConfigureAppConfiguration(IFunctionsConfigurationBuilder builder)
 		{
-			
+			//if (System.Environment.GetEnvironmentVariable("AZURE_FUNCTIONS_ENVIRONMENT") == "Development")
+			//{
+			//	builder.ConfigurationBuilder.AddUserSecrets<Startup>();
+			//}
 			builder.ConfigurationBuilder
 			   .SetBasePath(Environment.CurrentDirectory)
 			   .AddJsonFile("local.settings.json", true)
-			   .AddUserSecrets(Assembly.GetExecutingAssembly(), true)
+			   //.AddUserSecrets(Assembly.GetExecutingAssembly(), true)
+			   .AddUserSecrets<Startup>()
 			   .AddEnvironmentVariables()
 			   .Build();
 

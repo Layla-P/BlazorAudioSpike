@@ -56,6 +56,8 @@ namespace AudioProcessor
 				return new BadRequestObjectResult(e);
 			}
 
+			log.LogCritical(downloadResponse.TranscriptionResponse.Text);
+
 			return  new JsonResult(downloadResponse);
 		}
 	}

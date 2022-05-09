@@ -8,37 +8,38 @@ using Transcription.Helpers.Interfaces;
 
 namespace Transcription
 {
-	public class TranscriptionService : ITranscriptionService
-	{
-		private readonly HttpClient _httpClient;
-		private readonly IServiceHelpers _helper;
-		private readonly TranscriptionAccount _account;
+    public class TranscriptionService : ITranscriptionService
+    {
+        private readonly HttpClient _httpClient;
+        private readonly IServiceHelpers _helper;
+        private readonly TranscriptionAccount _account;
 
 
-		public TranscriptionService(IOptions<TranscriptionAccount> transcriptionAccount, HttpClient httpClient, IServiceHelpers helper)
-		{
-			_account = transcriptionAccount.Value ?? throw new ArgumentNullException(nameof(transcriptionAccount));
-			_helper = helper ?? throw new ArgumentNullException(nameof(helper));
-			_httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-			_httpClient.DefaultRequestHeaders.Add("Authorization", _account.AuthToken);
-		}
-		public async Task<TranscriptionResponse> SubmitAudioFileAsync(TranscriptionRequest transcriptionRequest)
-		{
-			return await _helper.SubmitAsync(transcriptionRequest);
-		}
-		public async Task<TranscriptionResponse> RetrieveAudioFileAsync(string transcriptId)
-		{
-			_httpClient.DefaultRequestHeaders.Add("Accepts", "application/json");
-			HttpResponseMessage response = await _httpClient.GetAsync($"{_account.Endpoint}/{transcriptId}");
-			
-			response.EnsureSuccessStatusCode();
+        public TranscriptionService(IOptions<TranscriptionAccount> transcriptionAccount, HttpClient httpClient, IServiceHelpers helper)
+        {
+            _account = transcriptionAccount.Value ?? throw new ArgumentNullException(nameof(transcriptionAccount));
+            _helper = helper ?? throw new ArgumentNullException(nameof(helper));
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            _httpClient.DefaultRequestHeaders.Add("Authorization", _account.AuthToken);
+        }
+        public async Task<TranscriptionResponse> SubmitAudioFileAsync(TranscriptionRequest transcriptionRequest)
+        {
+            return await _helper.SubmitAsync(transcriptionRequest);
+        }
+        public async Task<TranscriptionResponse> RetrieveAudioFileAsync(string transcriptId)
+        {
+            _httpClient.DefaultRequestHeaders.Add("Accepts", "application/json");
+            
+            HttpResponseMessage response = await _httpClient.GetAsync($"{_account.Endpoint}/{transcriptId}");
 
-			var responseJson = await response.Content.ReadAsStringAsync();
-			var resp =  _helper.ConvertToTranscriptionResponse(responseJson);
+            response.EnsureSuccessStatusCode();
 
-			return resp;
-		}
+            var responseJson = await response.Content.ReadAsStringAsync();
+            var resp = _helper.ConvertToTranscriptionResponse(responseJson);
+
+            return resp;
+        }
 
 
-	}
+    }
 }

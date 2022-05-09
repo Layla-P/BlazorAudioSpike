@@ -18,6 +18,7 @@ namespace AudioProcessor
 		private readonly ITableDbContext _tableDbContext;
 		private readonly ITranscriptionService _transcriptionService;	
 		private string transcriptionId = string.Empty;
+		private const string NGROK_URL_STRING = "d356-86-165-30-241";
 		public BlobTrigger(ILoggerFactory log,
 			IOptions<AzStorageConfiguration> blobConfiguration,
 			ITranscriptionService transcriptionService,
@@ -30,8 +31,9 @@ namespace AudioProcessor
 		}
 
 		[FunctionName("BlobTrigger")]
-		public async Task Run([BlobTrigger("audiocontainer/UploadsAudio-{id}.mp3", Connection= "StorageConnectionString")] Stream myBlob, string id, ILogger log)
+		public async Task Run([BlobTrigger("audiocontainer/UploadsAudio-{id}.mp3")] Stream myBlob, string id, ILogger log)
 		{
+			
 			log.LogInformation($"C# Blob trigger function Processed blob\n Id:{id} \n Size: {myBlob.Length} Bytes");
 			var filename = $"UploadsAudio-{id}.mp3";
 
@@ -64,7 +66,7 @@ namespace AudioProcessor
 			var transcriptionRequest = new TranscriptionRequest
 			{
 				AudioUrl = url,
-				WebhookUrl = "https://cf16e3ff1158.ngrok.io/api/download"
+				WebhookUrl = $"https://{NGROK_URL_STRING}.ngrok.io/api/download"
 			};
 
 			return await _transcriptionService.SubmitAudioFileAsync(transcriptionRequest);
